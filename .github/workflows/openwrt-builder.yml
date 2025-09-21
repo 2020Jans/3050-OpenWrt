@@ -86,7 +86,20 @@ jobs:
         make download -j8
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
+    - name: 设置 Rust 国内镜像源
+      run: |
+        echo "设置 Rust 环境变量以使用国内镜像..."
+        mkdir -p ~/.cargo
+        cat > ~/.cargo/config <<EOF
+        [source.crates-io]
+        replace-with = 'ustc'
 
+        [source.ustc]
+        registry = "sparse+https://mirrors.ustc.edu.cn/crates.io-index/"
+
+        [net]
+        git-fetch-with-cli = true
+        EOF
     - name: Compile the firmware
       id: compile
       run: |
